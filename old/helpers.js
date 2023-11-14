@@ -1,5 +1,5 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
 /**
  * Return options for iohook from package.json
@@ -8,20 +8,19 @@ const fs = require("fs");
 function optionsFromPackage(attempts) {
   attempts = attempts || 2;
   if (attempts > 5) {
-    console.log("Can't resolve the main package.json file");
+    console.log("Can't resolve main package.json file");
     return {
       targets: [],
       platforms: [process.platform],
       arches: [process.arch],
     };
   }
-  let mainPath = Array(attempts).join("../");
+  let mainPath = Array(attempts).join('../');
   try {
     const content = fs.readFileSync(
-      path.join(__dirname, mainPath, "package.json"),
-      "utf-8"
+      path.join(__dirname, mainPath, 'package.json'),
+      'utf-8'
     );
-
     const packageJson = JSON.parse(content);
     const opts = packageJson.iohook || {};
     if (!opts.targets) {
@@ -35,32 +34,28 @@ function optionsFromPackage(attempts) {
   }
 }
 
-/**
- *
- */
 function printManualBuildParams() {
-  const runtime = process.version["electron"] ? "electron" : "node";
+  const runtime = process.versions['electron'] ? 'electron' : 'node';
   const essential =
     runtime +
-    "-v" +
-    process.version.modules +
-    "-" +
+    '-v' +
+    process.versions.modules +
+    '-' +
     process.platform +
-    "-" +
+    '-' +
     process.arch;
-
   const modulePath = path.join(
     __dirname,
-    "builds",
+    'builds',
     essential,
-    "build",
-    "Release",
-    "iohook.node"
+    'build',
+    'Release',
+    'iohook.node'
   );
   console.info(
     `Runtime: ${runtime} ABI: ${process.versions.modules} Platform: ${process.platform} ARCH: ${process.arch}`
   );
-  console.info("The path is:", modulePath);
+  console.info('The path is:', modulePath);
 }
 
 module.exports = { optionsFromPackage, printManualBuildParams };
